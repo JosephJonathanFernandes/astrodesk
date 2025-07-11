@@ -229,6 +229,8 @@ const messageInput = document.getElementById('messageInput');
 const sendButton = document.getElementById('sendButton');
 const typingIndicator = document.getElementById('typingIndicator');
 
+let sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
 function scrollToBottom() {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
@@ -287,7 +289,10 @@ async function sendMessage() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({ 
+                message: message,
+                session_id: sessionId  // Add session ID
+            })
         });
         
         if (!response.ok) {
@@ -340,6 +345,34 @@ async function sendMessage() {
     } finally {
         sendButton.disabled = false;
         messageInput.focus();
+    }
+}
+
+// Add clear chat function
+function clearChat() {
+    if (confirm('Are you sure you want to clear the chat history?')) {
+        fetch('/chat/clear', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ session_id: sessionId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Clear chat container
+                document.getElementById('chatContainer').innerHTML = `
+                    <div class="message bot-message">
+                        <strong>🤖 AstroBot:</strong> Hello! I'm AstroBot, your friendly space assistant! 🚀 Ask me anything about space, astronomy, planets, stars, or any cosmic phenomena. I'm here to help you explore the universe! ✨
+                    </div>
+                `;
+                
+                // Generate new session ID
+                sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+        })
+        .catch(error => console.error('Error clearing chat:', error));
     }
 }
 

@@ -3,87 +3,24 @@ import requests
 import random
 from groq import Groq
 import json
+from workflow import AstroBotWorkflow
+from space_facts import SpaceFactsGenerator
 
 app = Flask(__name__)
 
 NASA_API_KEY = "8gldDFCSaaAFEEsld1qYR2BAqCywsEmDCH1gkb3m"
 GROQ_API_KEY = "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"  # Replace with your actual GROQ API key
+astro_workflow = AstroBotWorkflow(GROQ_API_KEY)
+space_facts_generator = SpaceFactsGenerator(GROQ_API_KEY)
 
 
 @app.route("/")
 def home():
-    client = Groq(api_key=GROQ_API_KEY)
+    # Generate space facts using the SpaceFactsGenerator
+    fun_facts = space_facts_generator.generate_facts(count=5)
 
-    # Fallback facts in case API fails
-    fallback_facts = [
-        "A day on Venus is longer than its year.",
-        "There are more trees on Earth than stars in the Milky Way.",
-        "The Moon is moving away from Earth by 3.8 cm every year.",
-        "Neutron stars can spin at a rate of 600 rotations per second.",
-        "One million Earths can fit inside the Sun.",
-    ]
-
-    try:
-        # System prompt for generating space facts
-        system_prompt = """You are a space facts generator. Generate exactly 5 fascinating, accurate, and mind-blowing space facts. Each fact should be:
-        - Scientifically accurate and verifiable
-        - Concise (under 50 characters)
-        - Amazing and thought-provoking
-        - About different aspects of space (planets, stars, galaxies, phenomena, etc.)
-        - Suitable for general audiences
-        - rather than showing numbers, use descriptive phrases
-        
-        Format your response as a simple list with each fact on a new line, starting with a dash (-).
-        Do not include any introductory text, explanations, or additional commentary.
-        
-        Example format:
-        - Fact 1 here
-        - Fact 2 here
-        - Fact 3 here
-        - Fact 4 here
-        - Fact 5 here"""
-
-        user_prompt = "Generate 5 new fascinating space facts that are different from commonly known ones."
-
-        chat_completion = client.chat.completions.create(
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-            model="llama3-8b-8192",
-            temperature=0.8,
-            max_tokens=400,
-            stream=False,
-        )
-
-        # Parse the response to extract facts
-        response_text = chat_completion.choices[0].message.content.strip()
-
-        # Extract facts from the response
-        fun_facts = []
-        lines = response_text.split("\n")
-
-        for line in lines:
-            line = line.strip()
-            if line.startswith("-"):
-                fact = line[1:].strip()
-                if fact:
-                    fun_facts.append(fact)
-
-        # Ensure we have exactly 5 facts
-        if len(fun_facts) < 5:
-            # Add fallback facts if needed
-            fun_facts.extend(fallback_facts[: 5 - len(fun_facts)])
-        elif len(fun_facts) > 5:
-            fun_facts = fun_facts[:5]
-
-    except Exception as e:
-        print(f"Error generating facts with Groq: {e}")
-        # Use fallback facts if API fails
-        fun_facts = fallback_facts
-
-    # Select a random fact from the generated/fallback facts
-    random_fact = random.choice(fun_facts)
+    # Select a random fact from the generated facts
+    random_fact = space_facts_generator.get_random_fact(fun_facts)
 
     return render_template("index.html", fun_facts=fun_facts, random_fact=random_fact)
 
@@ -99,41 +36,21 @@ def chat_stream():
     try:
         data = request.get_json()
         user_message = data.get("message", "")
+        session_id = data.get("session_id", "default")
 
         if not user_message:
             return jsonify({"error": "No message provided"}), 400
 
-        client = Groq(api_key=GROQ_API_KEY)
-
-        # Create a space-themed system prompt
-        system_prompt = """You are AstroBot, a friendly and knowledgeable space assistant. You help users learn about astronomy, space exploration, planets, stars, galaxies, and all things related to space science. 
-        
-        Key guidelines:
-        - Keep responses informative yet engaging
-        - Use space-related emojis occasionally (🚀, 🌌, ⭐, 🪐, 🌙, 🛰️)
-        - Explain complex concepts in simple terms
-        - If asked about something not space-related, gently redirect to space topics
-        - Keep responses concise but thorough, aiming for 2-3 sentences
-        
-        - Include fascinating space facts when relevant"""
-
         def generate():
             try:
-                chat_completion = client.chat.completions.create(
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_message},
-                    ],
-                    model="llama3-8b-8192",
-                    temperature=0.7,
-                    max_tokens=1024,
-                    stream=True,
+                # Get response from workflow
+                response_content = astro_workflow.invoke_streaming(
+                    user_message, session_id
                 )
 
-                for chunk in chat_completion:
-                    if chunk.choices[0].delta.content is not None:
-                        content = chunk.choices[0].delta.content
-                        yield f"data: {json.dumps({'content': content})}\n\n"
+                # Stream the response character by character for better UX
+                for char in response_content:
+                    yield f"data: {json.dumps({'content': char})}\n\n"
 
                 yield f"data: {json.dumps({'done': True})}\n\n"
 
@@ -142,6 +59,17 @@ def chat_stream():
 
         return Response(generate(), mimetype="text/event-stream")
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# Add this route to get conversation status
+@app.route("/chat/status", methods=["GET"])
+def chat_status():
+    try:
+        session_id = request.args.get("session_id", "default")
+        status = astro_workflow.get_conversation_state(session_id)
+        return jsonify(status)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
