@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AstroDesk - Space Utilities</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+
+    <h1 class="text-center mb-4">Space Utilities – Weight Calculator</h1>
+
+    <form action="/calculate-weight" method="POST" class="mb-4">
+        <div class="mb-3">
+            <label for="weight" class="form-label">Enter Your Weight on Earth (kg):</label>
+            <input type="number" step="0.1" name="weight" required class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="planet" class="form-label">Select a Planet:</label>
+            <select name="planet" class="form-select" required>
+                <option>Mercury</option>
+                <option>Venus</option>
+                <option>Earth</option>
+                <option>Moon</option>
+                <option>Mars</option>
+                <option>Jupiter</option>
+                <option>Saturn</option>
+                <option>Uranus</option>
+                <option>Neptune</option>
+                <option>Pluto</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Calculate</button>
+    </form>
+
+    {% if result %}
+    <div class="alert alert-success">
+        Your weight on {{ planet }} is approximately: <strong>{{ result | round(2) }} kg</strong>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="alert alert-danger">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <a href="/" class="btn btn-secondary">Back to Home</a>
+
+</body>
+</html>
