@@ -1,0 +1,355 @@
+/* Space Theme CSS */
+:root {
+    --cosmic-dark: #0a0a0f;
+    --nebula-purple: #2c1810;
+    --star-blue: #1e3a8a;
+    --galaxy-violet: #4c1d95;
+    --cosmic-cyan: #06b6d4;
+    --stellar-gold: #fbbf24;
+    --supernova-orange: #f97316;
+    --asteroid-gray: #374151;
+    --space-text: #e5e7eb;
+    --space-text-bright: #f9fafb;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, var(--cosmic-dark) 0%, var(--nebula-purple) 50%, var(--star-blue) 100%);
+    color: var(--space-text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Animated stars background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 160px 30px, #fff, transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: twinkle 10s infinite;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+}
+
+/* Navigation Bar */
+.navbar {
+    background: rgba(10, 10, 15, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--cosmic-cyan);
+    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
+}
+
+.navbar-brand {
+    color: var(--stellar-gold) !important;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.nav-link {
+    color: var(--space-text) !important;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: var(--cosmic-cyan) !important;
+    text-shadow: 0 0 8px rgba(6, 182, 212, 0.8);
+    transform: translateY(-2px);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cosmic-cyan), var(--stellar-gold));
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Container and Typography */
+.container {
+    background: rgba(15, 15, 25, 0.8);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-top: 2rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+h1, h2, h3 {
+    color: var(--space-text-bright);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(45deg, var(--cosmic-cyan), var(--stellar-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+}
+
+h2 {
+    font-size: 2rem;
+    color: var(--stellar-gold);
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+}
+
+/* Cards and Alerts */
+.alert {
+    background: rgba(30, 58, 138, 0.3);
+    border: 1px solid var(--cosmic-cyan);
+    border-radius: 15px;
+    color: var(--space-text-bright);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 16px rgba(6, 182, 212, 0.2);
+}
+
+.alert-info {
+    background: rgba(6, 182, 212, 0.2);
+    border-color: var(--cosmic-cyan);
+}
+
+.alert-success {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: #22c55e;
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+}
+
+.alert-warning {
+    background: rgba(251, 191, 36, 0.2);
+    border-color: var(--stellar-gold);
+}
+
+.alert-primary {
+    background: rgba(76, 29, 149, 0.3);
+    border-color: var(--galaxy-violet);
+}
+
+/* List Groups */
+.list-group-item {
+    background: rgba(55, 65, 81, 0.5) !important;
+    border: 1px solid rgba(6, 182, 212, 0.3) !important;
+    color: var(--space-text) !important;
+    margin-bottom: 0.5rem;
+    border-radius: 10px !important;
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background: rgba(55, 65, 81, 0.8) !important;
+    transform: translateX(10px);
+    box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3);
+}
+
+/* Tables */
+.table {
+    color: var(--space-text);
+    background: rgba(15, 15, 25, 0.8);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.table th {
+    background: rgba(30, 58, 138, 0.8);
+    color: var(--space-text-bright);
+    border: none;
+    text-align: center;
+    padding: 1rem;
+}
+
+.table td {
+    border-color: rgba(6, 182, 212, 0.3);
+    padding: 1rem;
+    text-align: center;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background: rgba(55, 65, 81, 0.3);
+}
+
+/* Forms */
+.form-control, .form-select {
+    background: rgba(30, 58, 138, 0.3) !important;
+    border: 2px solid rgba(6, 182, 212, 0.5) !important;
+    color: var(--space-text-bright) !important;
+    border-radius: 10px !important;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    background: rgba(30, 58, 138, 0.5) !important;
+    border-color: var(--cosmic-cyan) !important;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.5) !important;
+    color: var(--space-text-bright) !important;
+}
+
+.form-label {
+    color: var(--space-text-bright);
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--star-blue), var(--galaxy-violet));
+    color: var(--space-text-bright);
+    box-shadow: 0 4px 15px rgba(30, 58, 138, 0.4);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, var(--galaxy-violet), var(--star-blue));
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(30, 58, 138, 0.6);
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, var(--asteroid-gray), #6b7280);
+    color: var(--space-text-bright);
+    box-shadow: 0 4px 15px rgba(55, 65, 81, 0.4);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(45deg, #6b7280, var(--asteroid-gray));
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(55, 65, 81, 0.6);
+}
+
+.btn-info {
+    background: linear-gradient(45deg, var(--cosmic-cyan), #0891b2);
+    color: var(--space-text-bright);
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+}
+
+.btn-info:hover {
+    background: linear-gradient(45deg, #0891b2, var(--cosmic-cyan));
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.6);
+}
+
+/* Special Elements */
+.cosmic-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cosmic-cyan), var(--stellar-gold), var(--cosmic-cyan), transparent);
+    border: none;
+    margin: 2rem 0;
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* ISS Map styling */
+#issMap {
+    border-radius: 15px;
+    border: 2px solid var(--cosmic-cyan);
+    box-shadow: 0 8px 32px rgba(6, 182, 212, 0.3);
+}
+
+/* Links */
+a {
+    color: var(--cosmic-cyan);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--stellar-gold);
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Loading animation */
+@keyframes orbit {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--cosmic-cyan);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: orbit 1s linear infinite;
+} 

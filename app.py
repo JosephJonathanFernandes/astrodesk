@@ -83,5 +83,18 @@ def calculate_weight():
     except:
         return render_template('utilities.html', error="Invalid input.")
 
+@app.route('/iss-pass')
+def iss_pass():
+    lat = request.args.get('lat')
+    lon = request.args.get('lon')
+    if not lat or not lon:
+        return {'error': 'Missing lat or lon'}, 400
+    try:
+        url = f'http://api.open-notify.org/iss-pass.json?lat={lat}&lon={lon}'
+        res = requests.get(url)
+        return res.json()
+    except Exception as e:
+        return {'error': 'Could not fetch ISS pass data'}, 500
+
 if __name__ == '__main__':
     app.run(debug=True)

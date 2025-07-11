@@ -4,16 +4,51 @@
     <meta charset="UTF-8">
     <title>Error - AstroDesk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='space-theme.css') }}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body class="container mt-4">
+<body>
 
-    <h1 class="text-danger">Oops! Something Went Wrong.</h1>
-
-    <div class="alert alert-warning">
-        {{ message }}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><i class="fas fa-rocket"></i> AstroDesk</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/asteroids"><i class="fas fa-meteor"></i> Asteroids</a></li>
+                <li class="nav-item"><a class="nav-link" href="/news"><i class="fas fa-newspaper"></i> Space News</a></li>
+                <li class="nav-item"><a class="nav-link" href="/events"><i class="fas fa-calendar-alt"></i> Space Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="/utilities"><i class="fas fa-tools"></i> Space Utilities</a></li>
+            </ul>
+        </div>
     </div>
+</nav>
 
-    <a href="/" class="btn btn-primary">Back to Home</a>
+<div class="container mt-4">
+    <div class="text-center">
+        <h1 class="text-danger mb-4"><i class="fas fa-exclamation-triangle"></i> Houston, We Have a Problem!</h1>
+        
+        <div class="alert alert-warning">
+            <i class="fas fa-satellite me-2"></i>{{ message }}
+        </div>
+        
+        <div class="mt-4">
+            <i class="fas fa-robot fa-5x mb-3" style="color: var(--cosmic-cyan);"></i>
+            <p style="color: var(--space-text); font-size: 1.2rem;">
+                Our space mission encountered an unexpected issue. Don't worry, our engineers are working on it!
+            </p>
+        </div>
+        
+        <div class="mt-4">
+            <a href="/" class="btn btn-primary me-3"><i class="fas fa-home me-2"></i>Return to Base</a>
+            <button onclick="history.back()" class="btn btn-secondary"><i class="fas fa-arrow-left me-2"></i>Go Back</button>
+        </div>
+    </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
