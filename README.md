@@ -24,6 +24,10 @@ AstroDesk is a Python Flask-based web application that allows users to:
 - **Simple, Responsive UI:**  
   Built with Flask templates and Bootstrap 5.
 
+- **Space Utilities (Weight Calculator):**  
+  Calculate your weight on different planets and moons.
+
+
 ---
 
 ## 🔧 Tech Stack
@@ -42,7 +46,8 @@ AstroDesk is a Python Flask-based web application that allows users to:
 
 ### 1️⃣ Clone the Repository:
 
-git clone https://github.com/YOUR-USERNAME/astrodesk.git
+git clone https://github.com/JosephJonathanFernandes/astrodesk.git
+
 
 cd astrodesk
 
@@ -84,6 +89,10 @@ astrodesk/
 │   ├── news.html
 
 │   ├── events.html
+
+│   ├── utilities.html
+
+│   ├── error.html
 
 ├── static/ (optional)
 
