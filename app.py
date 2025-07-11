@@ -176,14 +176,14 @@ def planet_positions():
     positions = {}
     for name in planets:
         planet = eph[name]
-        astrometric = eph['earth'].at(t_now).observe(planet)
-        ra, dec, distance = astrometric.radec()
+        astrometric = planet.at(t_now).ecliptic_position().au
         positions[name.title()] = {
-            'RA': ra.hours,
-            'DEC': dec.degrees,
-            'Distance (AU)': distance.au
+            'x': float(astrometric[0]),
+            'y': float(astrometric[1]),
+            'z': float(astrometric[2])
         }
     return jsonify(positions)
+
 
 @app.route('/moon-phase-by-date', methods=['POST'])
 def moon_phase_by_date():
@@ -199,6 +199,10 @@ def moon_phase_by_date():
 @app.route('/stargazer')
 def stargazer():
     return render_template("stargazer.html")
+
+@app.route('/planet-positions-graph')
+def planet_positions_graph():
+    return render_template('planet_positions_graph.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
