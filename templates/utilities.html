@@ -4,49 +4,232 @@
     <meta charset="UTF-8">
     <title>AstroDesk - Space Utilities</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='space-theme.css') }}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body class="container mt-4">
+<body>
 
-    <h1 class="text-center mb-4">Space Utilities – Weight Calculator</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><i class="fas fa-rocket"></i> AstroDesk</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/asteroids"><i class="fas fa-meteor"></i> Asteroids</a></li>
+                <li class="nav-item"><a class="nav-link" href="/news"><i class="fas fa-newspaper"></i> Space News</a></li>
+                <li class="nav-item"><a class="nav-link" href="/events"><i class="fas fa-calendar-alt"></i> Space Events</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/utilities"><i class="fas fa-tools"></i> Space Utilities</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/chat"><i class="fas fa-robot"></i> AstroBot</a></li>
 
-    <form action="/calculate-weight" method="POST" class="mb-4">
-        <div class="mb-3">
-            <label for="weight" class="form-label">Enter Your Weight on Earth (kg):</label>
-            <input type="number" step="0.1" name="weight" required class="form-control">
+            </ul>
         </div>
+    </div>
+</nav>
 
-        <div class="mb-3">
-            <label for="planet" class="form-label">Select a Planet:</label>
-            <select name="planet" class="form-select" required>
-                <option>Mercury</option>
-                <option>Venus</option>
-                <option>Earth</option>
-                <option>Moon</option>
-                <option>Mars</option>
-                <option>Jupiter</option>
-                <option>Saturn</option>
-                <option>Uranus</option>
-                <option>Neptune</option>
-                <option>Pluto</option>
-            </select>
+<div class="container mt-4">
+    <h1 class="text-center mb-4"><i class="fas fa-tools"></i> Space Utilities</h1>
+    
+    <!-- Weight Calculator Section -->
+    <div class="row mb-5">
+        <div class="col-md-8 mx-auto">
+            <div class="card" style="background: rgba(30, 58, 138, 0.3); border: 1px solid var(--cosmic-cyan); border-radius: 15px;">
+                <div class="card-header text-center" style="background: rgba(76, 29, 149, 0.5); border-bottom: 1px solid var(--cosmic-cyan);">
+                    <h2><i class="fas fa-weight"></i> Planetary Weight Calculator</h2>
+                    <p style="color: var(--space-text); margin: 0;">Discover how much you would weigh on different celestial bodies!</p>
+                </div>
+                <div class="card-body">
+                    <form action="/calculate-weight" method="POST" class="mb-4">
+                        <div class="mb-3">
+                            <label for="weight" class="form-label"><i class="fas fa-balance-scale me-2"></i>Enter Your Weight on Earth (kg):</label>
+                            <input type="number" step="0.1" name="weight" required class="form-control" placeholder="e.g., 70">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="planet" class="form-label"><i class="fas fa-globe me-2"></i>Select a Celestial Body:</label>
+                            <select name="planet" class="form-select" required>
+                                <option value="" disabled selected>Choose a planet or moon...</option>
+                                <option value="Mercury"><i class="fas fa-circle"></i> Mercury</option>
+                                <option value="Venus">♀ Venus</option>
+                                <option value="Earth">🌍 Earth</option>
+                                <option value="Moon">🌙 Moon</option>
+                                <option value="Mars">🔴 Mars</option>
+                                <option value="Jupiter">🪐 Jupiter</option>
+                                <option value="Saturn">🪐 Saturn</option>
+                                <option value="Uranus">🔵 Uranus</option>
+                                <option value="Neptune">🔵 Neptune</option>
+                                <option value="Pluto">❄️ Pluto</option>
+                            </select>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-calculator me-2"></i>Calculate Weight</button>
+                        </div>
+                    </form>
+
+                    {% if result %}
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>Your weight on <strong>{{ planet }}</strong> is approximately: <strong>{{ result | round(2) }} kg</strong>
+                    </div>
+                    {% endif %}
+
+                    {% if error %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-
-        <button type="submit" class="btn btn-primary">Calculate</button>
-    </form>
-
-    {% if result %}
-    <div class="alert alert-success">
-        Your weight on {{ planet }} is approximately: <strong>{{ result | round(2) }} kg</strong>
     </div>
-    {% endif %}
 
-    {% if error %}
-    <div class="alert alert-danger">
-        {{ error }}
+    <hr class="cosmic-divider">
+    
+    <!-- ISS Tracker Section -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card" style="background: rgba(30, 58, 138, 0.3); border: 1px solid var(--cosmic-cyan); border-radius: 15px;">
+                <div class="card-header text-center" style="background: rgba(6, 182, 212, 0.3); border-bottom: 1px solid var(--cosmic-cyan);">
+                    <h2><i class="fas fa-satellite"></i> ISS Tracker & Visibility</h2>
+                    <p style="color: var(--space-text); margin: 0;">Track the International Space Station and find when it's visible from your location!</p>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <button id="getLocationBtn" class="btn btn-info">
+                            <i class="fas fa-map-marker-alt me-2"></i>Show ISS Live Location & Next Pass Over Me
+                        </button>
+                    </div>
+                    
+                    <div id="issMap" style="height: 400px; width: 100%; display: none; margin-bottom: 1rem;"></div>
+                    
+                    <div id="issInfo" class="alert alert-primary" style="display: none;">
+                        <i class="fas fa-satellite me-2"></i><span id="issInfoText"></span>
+                    </div>
+                    
+                    <div id="issPass" class="alert alert-success" style="display: none;">
+                        <i class="fas fa-eye me-2"></i><span id="issPassText"></span>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>How it works:</strong> Click the button above to share your location. We'll show you where the ISS is right now on a map and tell you the next time it will be visible from your location!
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    {% endif %}
 
-    <a href="/" class="btn btn-secondary">Back to Home</a>
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-secondary"><i class="fas fa-home me-2"></i>Back to Home</a>
+    </div>
+</div>
+
+<!-- Leaflet CSS/JS for map rendering -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.getElementById('getLocationBtn').onclick = function() {
+    if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+    }
+    
+    const btn = document.getElementById('getLocationBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Getting your location...';
+    
+    navigator.geolocation.getCurrentPosition(success, error);
+    
+    function success(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        
+        btn.innerHTML = '<i class="fas fa-sync fa-spin me-2"></i>Loading ISS data...';
+        document.getElementById('issMap').style.display = 'block';
+        
+        // Fetch ISS live location
+        fetch('https://api.wheretheiss.at/v1/satellites/25544')
+            .then(res => res.json())
+            .then(data => {
+                const issLat = data.latitude;
+                const issLon = data.longitude;
+                const altitude = data.altitude;
+                const velocity = data.velocity;
+                
+                document.getElementById('issInfo').style.display = 'block';
+                document.getElementById('issInfoText').innerHTML = `ISS Current Location: Lat ${issLat.toFixed(2)}°, Lon ${issLon.toFixed(2)}° | Altitude: ${altitude.toFixed(0)} km | Speed: ${velocity.toFixed(0)} km/h`;
+                
+                // Render map
+                let map = L.map('issMap').setView([lat, lon], 3);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 18,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+                
+                // User marker
+                const userIcon = L.divIcon({
+                    html: '<i class="fas fa-user" style="color: #fbbf24; font-size: 20px;"></i>',
+                    iconSize: [20, 20],
+                    className: 'custom-div-icon'
+                });
+                L.marker([lat, lon], {icon: userIcon}).addTo(map).bindPopup('📍 Your Location').openPopup();
+                
+                // ISS marker
+                const issIcon = L.divIcon({
+                    html: '<i class="fas fa-satellite" style="color: #06b6d4; font-size: 24px;"></i>',
+                    iconSize: [24, 24],
+                    className: 'custom-div-icon'
+                });
+                L.marker([issLat, issLon], {icon: issIcon}).addTo(map).bindPopup(`🛰️ ISS<br/>Altitude: ${altitude.toFixed(0)} km<br/>Speed: ${velocity.toFixed(0)} km/h`);
+                
+                btn.innerHTML = '<i class="fas fa-check me-2"></i>Data loaded successfully!';
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sync me-2"></i>Refresh ISS Location';
+                }, 2000);
+            })
+            .catch(err => {
+                console.error('Error fetching ISS data:', err);
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Error loading ISS data';
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-map-marker-alt me-2"></i>Show ISS Live Location & Next Pass Over Me';
+                }, 3000);
+            });
+        
+        // Fetch ISS pass times
+        fetch(`/iss-pass?lat=${lat}&lon=${lon}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.response && data.response.length > 0) {
+                    const nextPass = data.response[0];
+                    const date = new Date(nextPass.risetime * 1000);
+                    document.getElementById('issPass').style.display = 'block';
+                    document.getElementById('issPassText').innerHTML = `Next ISS visible pass over your location: <strong>${date.toLocaleString()}</strong> (Duration: ${nextPass.duration} seconds)`;
+                } else {
+                    document.getElementById('issPass').style.display = 'block';
+                    document.getElementById('issPass').className = 'alert alert-warning';
+                    document.getElementById('issPassText').innerHTML = 'No visible ISS passes found for your location in the next few days.';
+                }
+            })
+            .catch(err => {
+                console.error('Error fetching ISS pass data:', err);
+                document.getElementById('issPass').style.display = 'block';
+                document.getElementById('issPass').className = 'alert alert-danger';
+                document.getElementById('issPassText').innerHTML = 'Unable to fetch ISS pass data. Please try again later.';
+            });
+    }
+    
+    function error() {
+        alert('Unable to retrieve your location. Please check your browser settings and try again.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-map-marker-alt me-2"></i>Show ISS Live Location & Next Pass Over Me';
+    }
+};
+</script>
 
 </body>
 </html>
