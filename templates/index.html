@@ -23,6 +23,7 @@
                 <li class="nav-item"><a class="nav-link" href="/events"><i class="fas fa-calendar-alt"></i> Space Events</a></li>
                 <li class="nav-item"><a class="nav-link" href="/utilities"><i class="fas fa-tools"></i> Space Utilities</a></li>
                 <li class="nav-item"><a class="nav-link active" href="/chat"><i class="fas fa-robot"></i> AstroBot</a></li>
+                 <li class="nav-item"><a class="nav-link" href="/stargazer"><i class="fas fa-star-and-crescent"></i>Stargazer Guide</a></li>
 
             </ul>
         </div>
@@ -91,7 +92,19 @@
         </div>
     </div>
 
+    <div class="col-md-6 col-lg-3 mb-3">
+    <div class="card h-100" style="background: rgba(30, 58, 138, 0.3); border: 1px solid var(--cosmic-cyan); border-radius: 15px;">
+        <div class="card-body text-center">
+            <i class="fas fa-star-and-crescent fa-3x mb-3" style="color: var(--galaxy-violet);"></i>
+            <h5 class="card-title" style="color: var(--space-text-bright);">Stargazer Guide</h5>
+            <p class="card-text" style="color: var(--space-text);">See what’s visible in the sky from your city</p>
+            <a href="/stargazer" class="btn btn-primary">Check Now <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+</div>
+
     <hr class="cosmic-divider">
+
 
     <!-- Space Facts -->
     <h2><i class="fas fa-brain"></i> More Space Facts</h2>
@@ -105,6 +118,9 @@
         {% endfor %}
     </div>
 </div>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

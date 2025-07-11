@@ -23,6 +23,7 @@
                 <li class="nav-item"><a class="nav-link" href="/events"><i class="fas fa-calendar-alt"></i> Space Events</a></li>
                 <li class="nav-item"><a class="nav-link active" href="/utilities"><i class="fas fa-tools"></i> Space Utilities</a></li>
                 <li class="nav-item"><a class="nav-link active" href="/chat"><i class="fas fa-robot"></i> AstroBot</a></li>
+                 <li class="nav-item"><a class="nav-link" href="/stargazer">Stargazer Guide</a></li>
 
             </ul>
         </div>
@@ -84,6 +85,48 @@
             </div>
         </div>
     </div>
+
+    <!-- Moon Phase by Date -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-moon"></i> Moon Phase on Your Birthday</h5>
+        <form id="moonPhaseForm">
+            <div class="mb-3">
+                <label for="dateInput" class="form-label">Enter Date (YYYY-MM-DD):</label>
+                <input type="date" id="dateInput" name="date" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Moon Phase</button>
+        </form>
+        <div id="moonPhaseResult" class="mt-3"></div>
+    </div>
+</div>
+
+<!-- Planet Positions -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-globe"></i> Planetary Positions</h5>
+        <a href="/planet-positions" class="btn btn-secondary">View JSON Data</a>
+    </div>
+</div>
+
+<script>
+document.getElementById("moonPhaseForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const date = document.getElementById("dateInput").value;
+    const response = await fetch("/moon-phase-by-date", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `date=${date}`
+    });
+    const data = await response.json();
+    if (data.moon_phase_angle) {
+        document.getElementById("moonPhaseResult").innerHTML = `<div class="alert alert-info">Moon Phase on ${data.date}: ${data.moon_phase_angle}</div>`;
+    } else {
+        document.getElementById("moonPhaseResult").innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+    }
+});
+</script>
+
 
     <hr class="cosmic-divider">
     
