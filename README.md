@@ -55,20 +55,7 @@ AstroDesk is a comprehensive Python Flask-based web application that provides an
   - Celestial object visibility for major Indian cities
 
 - **Planet Position Tracker:**  
-  3D visualization of planetary positions using Skyfield astronomical calculations with enhanced UI featuring:
-  - Interactive planetary position cards with detailed heliocentric coordinates
-  - Real-time distance calculations from the Sun
-  - Color-coded planets with astronomical symbols
-  - Conversion between AU and kilometers
-  - Professional data visualization with explanatory information
-
-- **NASA Picture of the Day:**  
-  Daily astronomy picture integration featuring:
-  - High-resolution space imagery and videos
-  - Detailed explanations and educational content
-  - HD download links for wallpapers
-  - Copyright attribution and professional presentation
-  - Seamless integration with homepage display
+  3D visualization of planetary positions using Skyfield astronomical calculations.
 
 - **ISS Pass Predictor:**  
   International Space Station flyover predictions for any location.
@@ -89,12 +76,6 @@ AstroDesk is a comprehensive Python Flask-based web application that provides an
 
 - **Interactive Navigation:**  
   Intuitive card-based interface with floating chat bot access.
-
-- **Team Information & Credits:**  
-  Comprehensive About Us section with team member profiles and project details.
-
-- **Professional Footer:**  
-  Hackathon branding with team credits and GitHub repository links.
 
 
 ---
@@ -180,85 +161,6 @@ http://127.0.0.1:5000
 
 ---
 
-## 🚀 Deployment on Render
-
-### Quick Deploy (Recommended)
-
-1. **Fork this repository** to your GitHub account
-
-2. **Connect to Render:**
-   - Go to [Render.com](https://render.com) and sign up/login
-   - Click "New +" and select "Web Service"
-   - Connect your GitHub repository
-
-3. **Configure Environment Variables:**
-   - Set `NASA_API_KEY` to your NASA API key
-   - Set `GROQ_API_KEY` to your Groq API key
-   - The app will use default keys if not set (for demo purposes)
-
-4. **Deploy Settings:**
-   - **Runtime:** Python 3
-   - **Build Command:** `chmod +x build.sh && ./build.sh`
-   - **Start Command:** `gunicorn app:app`
-   - **Auto-Deploy:** Enable
-
-5. **Click "Create Web Service"** and wait for deployment!
-
-### Manual Deploy
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/JosephJonathanFernandes/astrodesk.git
-   cd astrodesk
-   ```
-
-2. **Create a new Web Service on Render:**
-   - Runtime: Python 3
-   - Build Command: `chmod +x build.sh && ./build.sh`
-   - Start Command: `gunicorn app:app`
-
-3. **Set Environment Variables:**
-   ```
-   NASA_API_KEY=your_nasa_api_key_here
-   GROQ_API_KEY=your_groq_api_key_here
-   RENDER=true
-   ```
-
-4. **Deploy and enjoy!**
-
-### Using render.yaml (Infrastructure as Code)
-
-For automated deployment, use the included `render.yaml` file:
-
-1. **Push to GitHub** with the render.yaml file
-2. **Import to Render** using the "Infrastructure as Code" option
-3. **Set your API keys** in the Render dashboard
-4. **Deploy automatically!**
-
-### Deployment Features
-
-- ✅ **Automatic ephemeris data download** during build
-- ✅ **Environment variable configuration** for API keys
-- ✅ **Production-ready with Gunicorn** WSGI server
-- ✅ **Health checks** for monitoring
-- ✅ **Zero-downtime deployments** with Render
-- ✅ **HTTPS enabled** by default
-- ✅ **Custom domain support** available
-
-### Post-Deployment
-
-After successful deployment, your AstroDesk will be available at:
-`https://your-app-name.onrender.com`
-
-The app includes:
-- 🌍 **NASA Picture of the Day** on homepage
-- 🤖 **AI-powered AstroBot** chat
-- 🛰️ **Real-time planetary positions** with enhanced UI
-- 📊 **Space data visualization** and tools
-- 👥 **Team information** and project details
-
----
-
 ## 🗂️ Project Structure
 
 ```
@@ -272,13 +174,12 @@ astrodesk/
 ├── uv.lock                    # Dependency lock file
 ├── README.md                  # Project documentation
 ├── templates/                 # HTML templates
-│   ├── index.html            # Homepage with NASA APOD and navigation cards
-│   ├── about.html            # Team information and project details
+│   ├── index.html            # Homepage with navigation cards
 │   ├── chat.html             # AI chatbot interface
 │   ├── asteroids.html        # Asteroid tracking page
 │   ├── news.html             # Space news feed
 │   ├── events.html           # Space events calendar
-│   ├── utilities.html        # Enhanced space calculation tools
+│   ├── utilities.html        # Space calculation tools
 │   ├── stargazer.html        # Sky viewing guide
 │   ├── story.html            # AI story generator
 │   ├── planet_positions_graph.html  # 3D planet visualization
@@ -294,7 +195,6 @@ astrodesk/
 
 ### **Space Data APIs**
 - **NASA NeoWs API** - Near-Earth Object tracking
-- **NASA APOD API** - Astronomy Picture of the Day with high-resolution imagery
 - **Launch Library 2 API** - Rocket launches and missions  
 - **Spaceflight News API** - Latest space news articles
 - **Open-Notify ISS API** - International Space Station tracking
@@ -372,15 +272,11 @@ astrodesk/
 
 ---
 
-## 👥 Team AstroDesk
+## 👥 Team Members
 
-**Pratik Nayak** - Full Stack Developer  
-**Akaash Samson** - Backend Developer  
-**Joseph Jonathan Fernandes** - Frontend Developer  
-
-Built with ❤️ at **Coders Club Hackathon 2025** by Team AstroDesk
-
-🔗 **GitHub Repository:** https://github.com/JosephJonathanFernandes/astrodesk  
+**Pratik**   
+**Akaash**  
+**Joseph**  
 
 ---
 

@@ -1,28 +1,21 @@
-import json
-import os
-from datetime import datetime, timedelta
-
-import requests
 from flask import Flask, render_template, request, jsonify, Response
-from skyfield import almanac
-from skyfield.api import load, Topos
-from skyfield.api import utc
-
-from space_facts import SpaceFactsGenerator
-from story import SpaceTravelStoryGenerator
+import requests
+import random
+from groq import Groq
+import json
 from workflow import AstroBotWorkflow
+from space_facts import SpaceFactsGenerator
+from skyfield.api import load, Topos
+from skyfield import almanac
+from datetime import datetime, timedelta
+from skyfield.api import utc
+from story import SpaceTravelStoryGenerator
+
 
 app = Flask(__name__)
 
-# Environment variables for production deployment
-NASA_API_KEY = os.getenv("NASA_API_KEY", "8gldDFCSaaAFEEsld1qYR2BAqCywsEmDCH1gkb3m")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "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")
-
-# Production configuration
-if os.getenv("RENDER"):
-    app.config["DEBUG"] = False
-else:
-    app.config["DEBUG"] = True
+NASA_API_KEY = "8gldDFCSaaAFEEsld1qYR2BAqCywsEmDCH1gkb3m"
+GROQ_API_KEY = "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"
 astro_workflow = AstroBotWorkflow(GROQ_API_KEY)
 space_facts_generator = SpaceFactsGenerator(GROQ_API_KEY)
 story_generator = SpaceTravelStoryGenerator(GROQ_API_KEY)
@@ -36,18 +29,7 @@ ts = load.timescale()
 def home():
     fun_facts = space_facts_generator.generate_facts(count=5)
     random_fact = space_facts_generator.get_random_fact(fun_facts)
-    
-    # Fetch NASA Picture of the Day
-    apod_data = None
-    try:
-        apod_url = f"https://api.nasa.gov/planetary/apod?api_key={NASA_API_KEY}"
-        apod_response = requests.get(apod_url)
-        if apod_response.status_code == 200:
-            apod_data = apod_response.json()
-    except Exception as e:
-        print(f"Error fetching APOD: {e}")
-    
-    return render_template("index.html", fun_facts=fun_facts, random_fact=random_fact, apod=apod_data)
+    return render_template("index.html", fun_facts=fun_facts, random_fact=random_fact)
 
 
 @app.route("/chat")
@@ -278,12 +260,5 @@ def planet_positions_graph():
     return render_template("planet_positions_graph.html")
 
 
-@app.route("/about")
-def about():
-    return render_template("about.html")
-
-
 if __name__ == "__main__":
-    # For local development
-    port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=app.config["DEBUG"])
+    app.run(debug=True)
