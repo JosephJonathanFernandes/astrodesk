@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AstroDesk - Space Chat Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='space-theme.css') }}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .chat-container {
+            height: 70vh;
+            overflow-y: auto;
+            border: 2px solid var(--cosmic-cyan);
+            border-radius: 15px;
+            background: rgba(15, 15, 25, 0.9);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            background: linear-gradient(45deg, var(--star-blue), var(--galaxy-violet));
+            color: var(--space-text-bright);
+            margin-left: auto;
+            text-align: right;
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+        }
+        
+        .bot-message {
+            background: linear-gradient(45deg, var(--cosmic-cyan), #0891b2);
+            color: var(--space-text-bright);
+            margin-right: auto;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+        
+        .message-input {
+            border: 2px solid var(--cosmic-cyan);
+            border-radius: 25px;
+            padding: 0.75rem 1rem;
+            background: rgba(30, 58, 138, 0.3);
+            color: var(--space-text-bright);
+            resize: none;
+            min-height: 50px;
+        }
+        
+        .message-input:focus {
+            border-color: var(--stellar-gold);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+            background: rgba(30, 58, 138, 0.5);
+        }
+        
+        .message-input::placeholder {
+            color: rgba(229, 231, 235, 0.7) !important;
+        }
+        
+        .input-group {
+            display: flex;
+        }
+        
+        .send-button {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, var(--cosmic-cyan), var(--stellar-gold));
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .send-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .typing-indicator {
+            display: none;
+            color: var(--cosmic-cyan);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .typing-dots {
+            animation: typingDots 1.5s infinite;
+        }
+        
+        @keyframes typingDots {
+            0%, 60%, 100% { opacity: 0; }
+            30% { opacity: 1; }
+        }
+        
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .quick-question {
+            background: rgba(76, 29, 149, 0.3);
+            border: 1px solid var(--galaxy-violet);
+            color: var(--space-text);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .quick-question:hover {
+            background: rgba(76, 29, 149, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 29, 149, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><i class="fas fa-rocket"></i> AstroDesk</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item"><a class="nav-link" href="/asteroids"><i class="fas fa-meteor"></i> Asteroids</a></li>
+                <li class="nav-item"><a class="nav-link" href="/news"><i class="fas fa-newspaper"></i> Space News</a></li>
+                <li class="nav-item"><a class="nav-link" href="/events"><i class="fas fa-calendar-alt"></i> Space Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="/utilities"><i class="fas fa-tools"></i> Space Utilities</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/chat"><i class="fas fa-robot"></i> AstroBot</a></li>
+                 <li class="nav-item"><a class="nav-link" href="/stargazer"><i class="fas fa-star-and-crescent"></i>Stargazer Guide</a></li>
+           </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">
+        <i class="fas fa-robot"></i> AstroBot - Your Space Assistant 🚀
+    </h1>
+    
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card" style="background: rgba(30, 58, 138, 0.3); border: 1px solid var(--cosmic-cyan); border-radius: 15px;">
+                <div class="card-header text-center" style="background: rgba(76, 29, 149, 0.5); border-bottom: 1px solid var(--cosmic-cyan);">
+                    <h3><i class="fas fa-comments"></i> Chat with AstroBot</h3>
+                    <p style="color: var(--space-text); margin: 0;">Ask me anything about space, astronomy, and the universe! 🌌</p>
+                </div>
+                <div class="card-body">
+                    <!-- Quick Questions -->
+                    <div class="quick-questions">
+                        <div class="quick-question" onclick="sendQuickQuestion('What is a black hole?')">
+                            🕳️ What is a black hole?
+                        </div>
+                        <div class="quick-question" onclick="sendQuickQuestion('How far is Mars from Earth?')">
+                            🔴 How far is Mars from Earth?
+                        </div>
+                        <div class="quick-question" onclick="sendQuickQuestion('What is the ISS?')">
+                            🛰️ What is the ISS?
+                        </div>
+                        <div class="quick-question" onclick="sendQuickQuestion('Tell me about the James Webb telescope')">
+                            🔭 Tell me about JWST
+                        </div>
+                        <div class="quick-question" onclick="sendQuickQuestion('What are exoplanets?')">
+                            🪐 What are exoplanets?
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Messages -->
+                    <div id="chatContainer" class="chat-container">
+                        <div class="message bot-message">
+                            <strong>🤖 AstroBot:</strong> Hello! I'm AstroBot, your friendly space assistant! 🚀 Ask me anything about space, astronomy, planets, stars, or any cosmic phenomena. I'm here to help you explore the universe! ✨
+                        </div>
+                    </div>
+                    
+                    <!-- Typing Indicator -->
+                    <div id="typingIndicator" class="typing-indicator">
+                        <i class="fas fa-robot"></i> AstroBot is typing<span class="typing-dots">...</span>
+                    </div>
+                    
+                    <!-- Message Input -->
+                    <div class="input-group">
+                        <textarea 
+                            id="messageInput" 
+                            class="form-control message-input" 
+                            placeholder="Ask me about space, astronomy, planets, or anything cosmic..." 
+                            rows="2"
+                            onkeydown="handleKeyDown(event)"
+                        ></textarea>
+                        <button id="sendButton" class="btn send-button" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <small style="color: var(--space-text);">
+                            <i class="fas fa-info-circle"></i> Powered by Groq AI | Press Enter to send (Shift+Enter for new line)
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-secondary"><i class="fas fa-home me-2"></i>Back to Home</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const chatContainer = document.getElementById('chatContainer');
+const messageInput = document.getElementById('messageInput');
+const sendButton = document.getElementById('sendButton');
+const typingIndicator = document.getElementById('typingIndicator');
+
+let sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+function scrollToBottom() {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function addMessage(content, isUser = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+    
+    if (isUser) {
+        messageDiv.innerHTML = `<strong>👤 You:</strong> ${content}`;
+    } else {
+        messageDiv.innerHTML = `<strong>🤖 AstroBot:</strong> ${content}`;
+    }
+    
+    chatContainer.appendChild(messageDiv);
+    scrollToBottom();
+    return messageDiv;
+}
+
+function showTyping() {
+    typingIndicator.style.display = 'block';
+    scrollToBottom();
+}
+
+function hideTyping() {
+    typingIndicator.style.display = 'none';
+}
+
+function sendQuickQuestion(question) {
+    messageInput.value = question;
+    sendMessage();
+}
+
+function handleKeyDown(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
+}
+
+async function sendMessage() {
+    const message = messageInput.value.trim();
+    if (!message) return;
+    
+    // Add user message
+    addMessage(message, true);
+    messageInput.value = '';
+    
+    // Disable send button and show typing
+    sendButton.disabled = true;
+    showTyping();
+    
+    try {
+        const response = await fetch('/chat/stream', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                message: message,
+                session_id: sessionId  // Add session ID
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to get response from server');
+        }
+        
+        hideTyping();
+        
+        // Create bot message container
+        const botMessageDiv = addMessage('', false);
+        const botContentSpan = botMessageDiv.querySelector('strong').nextSibling;
+        
+        // Read the stream
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let botResponse = '';
+        
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\n');
+            
+            for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                    try {
+                        const data = JSON.parse(line.slice(6));
+                        
+                        if (data.content) {
+                            botResponse += data.content;
+                            botContentSpan.textContent = ' ' + botResponse;
+                            scrollToBottom();
+                        } else if (data.error) {
+                            throw new Error(data.error);
+                        } else if (data.done) {
+                            break;
+                        }
+                    } catch (parseError) {
+                        console.error('Error parsing JSON:', parseError);
+                    }
+                }
+            }
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        hideTyping();
+        addMessage(`Sorry, I encountered an error: ${error.message}. Please try again! 🚀`, false);
+    } finally {
+        sendButton.disabled = false;
+        messageInput.focus();
+    }
+}
+
+// Add clear chat function
+function clearChat() {
+    if (confirm('Are you sure you want to clear the chat history?')) {
+        fetch('/chat/clear', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ session_id: sessionId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Clear chat container
+                document.getElementById('chatContainer').innerHTML = `
+                    <div class="message bot-message">
+                        <strong>🤖 AstroBot:</strong> Hello! I'm AstroBot, your friendly space assistant! 🚀 Ask me anything about space, astronomy, planets, stars, or any cosmic phenomena. I'm here to help you explore the universe! ✨
+                    </div>
+                `;
+                
+                // Generate new session ID
+                sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+        })
+        .catch(error => console.error('Error clearing chat:', error));
+    }
+}
+
+// Focus on input when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    messageInput.focus();
+});
+</script>
+
+</body>
+</html>

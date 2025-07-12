@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AstroDesk - Space Travel Stories</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='space-theme.css') }}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><i class="fas fa-rocket"></i> AstroDesk</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+               <li class="nav-item"><a class="nav-link" href="/asteroids"><i class="fas fa-meteor"></i> Asteroids</a></li>
+                <li class="nav-item"><a class="nav-link" href="/news"><i class="fas fa-newspaper"></i> Space News</a></li>
+                <li class="nav-item"><a class="nav-link" href="/events"><i class="fas fa-calendar-alt"></i> Space Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="/utilities"><i class="fas fa-tools"></i> Space Utilities</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/chat"><i class="fas fa-robot"></i> AstroBot</a></li>
+                 <li class="nav-item"><a class="nav-link" href="/stargazer"><i class="fas fa-star-and-crescent"></i>Stargazer Guide</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-center"><i class="fas fa-rocket"></i> Space Travel Stories</h1>
+    <p class="text-center lead" style="color: var(--space-text); margin-bottom: 2rem;">
+        Embark on an AI-generated space adventure! Choose your destination and let us craft your journey.
+    </p>
+
+    <hr class="cosmic-divider">
+
+    <!-- Story Generation Form -->
+    <div class="row mb-4">
+        <div class="col-md-8 offset-md-2">
+            <div class="card story-form-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-compass"></i> Choose Your Destination</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/story" id="storyForm">
+                        <div class="mb-3">
+                            <label for="destination" class="form-label">Where would you like to travel in space?</label>
+                            <input type="text" 
+                                   class="form-control destination-input" 
+                                   id="destination" 
+                                   name="destination" 
+                                   placeholder="Mars"
+                                   required>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Enter any space destination: planets, moons, stars, galaxies, or cosmic phenomena
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg generate-btn" id="launchBtn">
+                                <i class="fas fa-rocket"></i> Launch My Adventure
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Story Display -->
+    {% if story_result %}
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <div class="card story-display-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-book-open"></i> Your Space Adventure to {{ story_result.destination }}</h3>
+                </div>
+                <div class="card-body">
+                    {% if story_result.success %}
+                    <div class="story-content">
+                        {% for paragraph in story_result.story.split('\n\n') %}
+                        <p>{{ paragraph.strip() }}</p>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        There was an issue generating your story, but here's a backup adventure:
+                    </div>
+                    <div class="story-content">
+                        {% for paragraph in story_result.story.split('\n\n') %}
+                        <p>{{ paragraph.strip() }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="text-center mt-4">
+                        <a href="/story" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i> Create Another Story
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Info Section -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <h4><i class="fas fa-info-circle"></i> About Space Travel Stories</h4>
+                <p>Our AI-powered story generator creates unique, educational, and exciting first-person space adventures. Each story is crafted to be both entertaining and scientifically accurate, taking you on a thrilling journey to your chosen destination while teaching you fascinating facts about the cosmos.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+/* Story Form Styling */
+.story-form-card {
+    background: rgba(15, 15, 25, 0.9) !important;
+    border: 2px solid var(--cosmic-cyan) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(6, 182, 212, 0.3) !important;
+    backdrop-filter: blur(10px);
+}
+
+.story-form-card .card-header {
+    background: linear-gradient(135deg, var(--star-blue), var(--galaxy-violet)) !important;
+    color: var(--space-text-bright) !important;
+    border-bottom: 2px solid var(--cosmic-cyan) !important;
+    border-radius: 18px 18px 0 0 !important;
+    padding: 20px;
+}
+
+.story-form-card .card-header h3 {
+    margin: 0;
+    font-size: 1.8em;
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+.story-form-card .card-body {
+    padding: 30px;
+}
+
+.destination-input {
+    background: rgba(30, 58, 138, 0.4) !important;
+    border: 2px solid var(--cosmic-cyan) !important;
+    border-radius: 15px !important;
+    color: var(--space-text-bright) !important;
+    font-size: 1.2em !important;
+    padding: 15px 20px !important;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.destination-input:focus {
+    background: rgba(30, 58, 138, 0.6) !important;
+    border-color: var(--stellar-gold) !important;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.4) !important;
+    color: var(--space-text-bright) !important;
+}
+
+.destination-input::placeholder {
+    color: var(--cosmic-cyan) !important;
+    opacity: 0.7;
+}
+
+.form-label {
+    color: var(--space-text-bright) !important;
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.form-text {
+    color: var(--cosmic-cyan) !important;
+    font-size: 0.9em;
+    margin-top: 8px;
+}
+
+.generate-btn {
+    background: linear-gradient(45deg, var(--supernova-orange), var(--stellar-gold)) !important;
+    border: none !important;
+    padding: 15px 40px !important;
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+    border-radius: 30px !important;
+    color: var(--cosmic-dark) !important;
+    text-shadow: none !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+}
+
+.generate-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(249, 115, 22, 0.6);
+    background: linear-gradient(45deg, var(--stellar-gold), var(--supernova-orange)) !important;
+}
+
+/* Story Display Styling */
+.story-display-card {
+    background: rgba(15, 15, 25, 0.95) !important;
+    border: 2px solid var(--stellar-gold) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 12px 40px rgba(251, 191, 36, 0.3) !important;
+    backdrop-filter: blur(15px);
+}
+
+.story-display-card .card-header {
+    background: linear-gradient(135deg, var(--stellar-gold), var(--supernova-orange)) !important;
+    color: var(--cosmic-dark) !important;
+    border-bottom: 2px solid var(--stellar-gold) !important;
+    border-radius: 18px 18px 0 0 !important;
+    padding: 20px;
+}
+
+.story-display-card .card-header h3 {
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 700;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.story-content {
+    background: linear-gradient(135deg, #0f0f19 0%, #1a1a2e 50%, #16213e 100%) !important;
+    border-radius: 15px;
+    padding: 40px;
+    margin: 20px 0;
+    border: 2px solid var(--cosmic-cyan);
+    box-shadow: 0 8px 32px rgba(6, 182, 212, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.story-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.story-content p {
+    color: var(--space-text-bright) !important;
+    font-size: 1.15em;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+    text-align: justify;
+    font-family: 'Georgia', serif;
+}
+
+.story-content p:last-child {
+    margin-bottom: 0;
+}
+
+.story-content p:first-letter {
+    font-size: 3em;
+    float: left;
+    line-height: 1;
+    margin: 0 8px 0 0;
+    color: var(--stellar-gold);
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    font-weight: bold;
+}
+
+.story-content p:nth-child(2):first-letter,
+.story-content p:nth-child(3):first-letter,
+.story-content p:nth-child(4):first-letter {
+    font-size: 2em;
+    color: var(--cosmic-cyan);
+    text-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--asteroid-gray), #6b7280) !important;
+    border: none !important;
+    padding: 12px 25px !important;
+    border-radius: 20px !important;
+    color: var(--space-text-bright) !important;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
+    background: linear-gradient(135deg, #6b7280, var(--asteroid-gray)) !important;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, var(--supernova-orange), #dd6b20) !important;
+    color: var(--space-text-bright) !important;
+    border: none !important;
+    border-radius: 15px !important;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, var(--star-blue), var(--galaxy-violet)) !important;
+    color: var(--space-text-bright) !important;
+    border: none !important;
+    border-radius: 15px !important;
+    padding: 20px;
+    border: 1px solid var(--cosmic-cyan);
+    box-shadow: 0 4px 16px rgba(6, 182, 212, 0.2);
+}
+
+.alert-info h4 {
+    color: var(--stellar-gold) !important;
+    margin-bottom: 10px;
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .story-form-card .card-body {
+        padding: 20px;
+    }
+    
+    .destination-input {
+        font-size: 1.1em !important;
+        padding: 12px 15px !important;
+    }
+    
+    .generate-btn {
+        padding: 12px 30px !important;
+        font-size: 1.1em !important;
+    }
+    
+    .story-content {
+        padding: 25px;
+    }
+    
+    .story-content p {
+        font-size: 1.1em;
+    }
+}
+</style>
+
+<script>
+// Dynamic placeholder animation
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('destination');
+    const placeholders = [
+        'Mars', 'Black Hole', 'Jupiter', 'Saturn', 'Alpha Centauri', 
+        'Andromeda Galaxy', 'Titan', 'Europa', 'Proxima Centauri',
+        'Betelgeuse', 'Vega', 'Neutron Star', 'Asteroid Belt',
+        'Orion Nebula', 'Pluto', 'Venus', 'Mercury', 'Neptune'
+    ];
+    
+    let currentIndex = 0;
+    
+    function changePlaceholder() {
+        input.placeholder = placeholders[currentIndex];
+        currentIndex = (currentIndex + 1) % placeholders.length;
+    }
+    
+    // Change placeholder every 2 seconds
+    setInterval(changePlaceholder, 2000);
+});
+</script>
+
+</body>
+</html>

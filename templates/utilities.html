@@ -22,6 +22,10 @@
                 <li class="nav-item"><a class="nav-link" href="/news"><i class="fas fa-newspaper"></i> Space News</a></li>
                 <li class="nav-item"><a class="nav-link" href="/events"><i class="fas fa-calendar-alt"></i> Space Events</a></li>
                 <li class="nav-item"><a class="nav-link active" href="/utilities"><i class="fas fa-tools"></i> Space Utilities</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/chat"><i class="fas fa-robot"></i> AstroBot</a></li>
+                 <li class="nav-item"><a class="nav-link" href="/stargazer">Stargazer Guide</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about"><i class="fas fa-users"></i> About Us</a></li>
+
             </ul>
         </div>
     </div>
@@ -82,6 +86,171 @@
             </div>
         </div>
     </div>
+
+    <!-- Moon Phase by Date -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-moon"></i> Moon Phase on Your Birthday</h5>
+        <form id="moonPhaseForm">
+            <div class="mb-3">
+                <label for="dateInput" class="form-label">Enter Date (YYYY-MM-DD):</label>
+                <input type="date" id="dateInput" name="date" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Moon Phase</button>
+        </form>
+        <div id="moonPhaseResult" class="mt-3"></div>
+    </div>
+</div>
+
+<!-- Planet Positions -->
+<div class="card mt-4" style="background: rgba(30, 58, 138, 0.3); border: 1px solid var(--cosmic-cyan); border-radius: 15px;">
+    <div class="card-header text-center" style="background: rgba(76, 29, 149, 0.5); border-bottom: 1px solid var(--cosmic-cyan);">
+        <h2><i class="fas fa-globe"></i> Planetary Positions</h2>
+        <p style="color: var(--space-text); margin: 0;">Real-time heliocentric coordinates of planets in our solar system</p>
+    </div>
+    <div class="card-body">
+        <div class="text-center mb-3">
+            <button id="loadPlanetPositions" class="btn btn-info">
+                <i class="fas fa-sync me-2"></i>Load Current Planetary Positions
+            </button>
+            <a href="/planet-positions-graph" class="btn btn-secondary ms-2">
+                <i class="fas fa-chart-line me-2"></i>View Chart
+            </a>
+        </div>
+        
+        <div id="planetPositionsContainer" style="display: none;">
+            <div class="row" id="planetPositionsGrid">
+                <!-- Planet position cards will be inserted here -->
+            </div>
+            
+            <div class="mt-4 p-3" style="background: rgba(0, 0, 0, 0.3); border-radius: 10px;">
+                <h6 class="text-center mb-3"><i class="fas fa-info-circle me-2"></i>Understanding the Data</h6>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>X-axis:</strong> Distance along the solar system plane (AU)
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Y-axis:</strong> Distance perpendicular to X-axis (AU)
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Z-axis:</strong> Distance above/below the plane (AU)
+                    </div>
+                </div>
+                <div class="text-center mt-2">
+                    <small class="text-muted">1 AU = 149.6 million kilometers (Earth-Sun distance)</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById("moonPhaseForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const date = document.getElementById("dateInput").value;
+    const response = await fetch("/moon-phase-by-date", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `date=${date}`
+    });
+    const data = await response.json();
+    if (data.moon_phase_angle) {
+        document.getElementById("moonPhaseResult").innerHTML = `<div class="alert alert-info">Moon Phase on ${data.date}: ${data.moon_phase_angle}</div>`;
+    } else {
+        document.getElementById("moonPhaseResult").innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+    }
+});
+
+// Planet Positions functionality
+document.getElementById("loadPlanetPositions").addEventListener("click", async function() {
+    const btn = document.getElementById("loadPlanetPositions");
+    const container = document.getElementById("planetPositionsContainer");
+    const grid = document.getElementById("planetPositionsGrid");
+    
+    // Show loading state
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading planetary positions...';
+    
+    try {
+        const response = await fetch("/planet-positions");
+        const data = await response.json();
+        
+        // Clear existing content
+        grid.innerHTML = '';
+        
+        // Planet colors and icons
+        const planetInfo = {
+            'Mercury': { color: '#8C7853', icon: 'fas fa-circle', emoji: '☿️' },
+            'Venus': { color: '#FFC649', icon: 'fas fa-circle', emoji: '♀️' },
+            'Mars': { color: '#CD5C5C', icon: 'fas fa-circle', emoji: '♂️' },
+            'Jupiter Barycenter': { color: '#D8CA9D', icon: 'fas fa-circle', emoji: '♃', name: 'Jupiter' },
+            'Saturn Barycenter': { color: '#FAD5A5', icon: 'fas fa-circle', emoji: '♄', name: 'Saturn' }
+        };
+        
+        // Create cards for each planet
+        Object.entries(data).forEach(([planet, position]) => {
+            const info = planetInfo[planet];
+            const displayName = info.name || planet;
+            const distance = Math.sqrt(position.x * position.x + position.y * position.y + position.z * position.z);
+            
+            const card = document.createElement('div');
+            card.className = 'col-md-6 col-lg-4 mb-3';
+            card.innerHTML = `
+                <div class="card h-100" style="background: rgba(0, 0, 0, 0.4); border: 1px solid ${info.color}; border-radius: 10px;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" style="color: ${info.color};">
+                            <span style="font-size: 1.5em;">${info.emoji}</span>
+                            <br>${displayName}
+                        </h5>
+                        <div class="mt-3">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <strong>X</strong><br>
+                                    <span class="text-info">${position.x.toFixed(3)} AU</span>
+                                </div>
+                                <div class="col-4">
+                                    <strong>Y</strong><br>
+                                    <span class="text-info">${position.y.toFixed(3)} AU</span>
+                                </div>
+                                <div class="col-4">
+                                    <strong>Z</strong><br>
+                                    <span class="text-info">${position.z.toFixed(3)} AU</span>
+                                </div>
+                            </div>
+                            <hr style="border-color: ${info.color};">
+                            <div class="text-center">
+                                <strong>Distance from Sun</strong><br>
+                                <span class="text-warning">${distance.toFixed(3)} AU</span><br>
+                                <small class="text-muted">${(distance * 149.6).toFixed(1)} million km</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        
+        // Show the container
+        container.style.display = 'block';
+        
+        // Update button
+        btn.innerHTML = '<i class="fas fa-check me-2"></i>Positions loaded successfully!';
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sync me-2"></i>Refresh Planetary Positions';
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Error loading planetary positions:', error);
+        btn.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Error loading positions';
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sync me-2"></i>Load Current Planetary Positions';
+        }, 3000);
+    }
+});
+</script>
+
 
     <hr class="cosmic-divider">
     
@@ -228,6 +397,24 @@ document.getElementById('getLocationBtn').onclick = function() {
     }
 };
 </script>
+
+<!-- Footer -->
+<footer class="mt-5 py-4" style="background: rgba(0, 0, 0, 0.8); border-top: 1px solid var(--cosmic-cyan);">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p style="color: var(--space-text); margin: 0;">
+                    Built with ❤️ at <strong>Coders Club Hackathon 2025</strong> by <strong>Team AstroDesk</strong>
+                </p>
+                <p style="color: var(--space-text); margin: 0; font-size: 0.9em;">
+                    <a href="https://github.com/JosephJonathanFernandes/astrodesk" target="_blank" style="color: var(--cosmic-cyan); text-decoration: none;">
+                        <i class="fab fa-github me-1"></i>github.com/JosephJonathanFernandes/astrodesk
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
 
 </body>
 </html>
