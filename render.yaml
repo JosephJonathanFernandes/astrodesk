@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: astrodesk
+    runtime: python
+    plan: free
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: gunicorn app:app
+    envVars:
+      - key: RENDER
+        value: true
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: NASA_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+    healthCheckPath: / 

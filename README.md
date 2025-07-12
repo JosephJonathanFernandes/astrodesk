@@ -55,7 +55,20 @@ AstroDesk is a comprehensive Python Flask-based web application that provides an
   - Celestial object visibility for major Indian cities
 
 - **Planet Position Tracker:**  
-  3D visualization of planetary positions using Skyfield astronomical calculations.
+  3D visualization of planetary positions using Skyfield astronomical calculations with enhanced UI featuring:
+  - Interactive planetary position cards with detailed heliocentric coordinates
+  - Real-time distance calculations from the Sun
+  - Color-coded planets with astronomical symbols
+  - Conversion between AU and kilometers
+  - Professional data visualization with explanatory information
+
+- **NASA Picture of the Day:**  
+  Daily astronomy picture integration featuring:
+  - High-resolution space imagery and videos
+  - Detailed explanations and educational content
+  - HD download links for wallpapers
+  - Copyright attribution and professional presentation
+  - Seamless integration with homepage display
 
 - **ISS Pass Predictor:**  
   International Space Station flyover predictions for any location.
@@ -76,6 +89,12 @@ AstroDesk is a comprehensive Python Flask-based web application that provides an
 
 - **Interactive Navigation:**  
   Intuitive card-based interface with floating chat bot access.
+
+- **Team Information & Credits:**  
+  Comprehensive About Us section with team member profiles and project details.
+
+- **Professional Footer:**  
+  Hackathon branding with team credits and GitHub repository links.
 
 
 ---
@@ -161,6 +180,17 @@ http://127.0.0.1:5000
 
 ---
 
+
+
+The app includes:
+- 🌍 **NASA Picture of the Day** on homepage
+- 🤖 **AI-powered AstroBot** chat
+- 🛰️ **Real-time planetary positions** with enhanced UI
+- 📊 **Space data visualization** and tools
+- 👥 **Team information** and project details
+
+---
+
 ## 🗂️ Project Structure
 
 ```
@@ -174,12 +204,13 @@ astrodesk/
 ├── uv.lock                    # Dependency lock file
 ├── README.md                  # Project documentation
 ├── templates/                 # HTML templates
-│   ├── index.html            # Homepage with navigation cards
+│   ├── index.html            # Homepage with NASA APOD and navigation cards
+│   ├── about.html            # Team information and project details
 │   ├── chat.html             # AI chatbot interface
 │   ├── asteroids.html        # Asteroid tracking page
 │   ├── news.html             # Space news feed
 │   ├── events.html           # Space events calendar
-│   ├── utilities.html        # Space calculation tools
+│   ├── utilities.html        # Enhanced space calculation tools
 │   ├── stargazer.html        # Sky viewing guide
 │   ├── story.html            # AI story generator
 │   ├── planet_positions_graph.html  # 3D planet visualization
@@ -195,6 +226,7 @@ astrodesk/
 
 ### **Space Data APIs**
 - **NASA NeoWs API** - Near-Earth Object tracking
+- **NASA APOD API** - Astronomy Picture of the Day with high-resolution imagery
 - **Launch Library 2 API** - Rocket launches and missions  
 - **Spaceflight News API** - Latest space news articles
 - **Open-Notify ISS API** - International Space Station tracking
@@ -272,11 +304,15 @@ astrodesk/
 
 ---
 
-## 👥 Team Members
+## 👥 Team AstroDesk
 
-**Pratik**   
-**Akaash**  
-**Joseph**  
+**Pratik Nayak** - Full Stack Developer  
+**Akaash Samson** - Backend Developer  
+**Joseph Jonathan Fernandes** - Frontend Developer  
+
+Built with ❤️ at **Coders Club Hackathon 2025** by Team AstroDesk
+
+🔗 **GitHub Repository:** https://github.com/JosephJonathanFernandes/astrodesk  
 
 ---
 
