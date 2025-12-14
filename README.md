@@ -319,9 +319,15 @@ Built with ❤️ at **Coders Club Hackathon 2025** by Team AstroDesk
 
 ## 📄 License
 
-For educational and hackathon use only.  
-All API content belongs to respective organizations.  
-Created for **Coders Club Hackathon 2025** - Space & Beyond Category.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## 🛡️ Security
+
+For security policy and vulnerability reporting, please refer to [SECURITY.md](SECURITY.md).
 
 ---
 

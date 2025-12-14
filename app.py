@@ -15,8 +15,11 @@ from workflow import AstroBotWorkflow
 app = Flask(__name__)
 
 # Environment variables for production deployment
-NASA_API_KEY = os.getenv("NASA_API_KEY", "8gldDFCSaaAFEEsld1qYR2BAqCywsEmDCH1gkb3m")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "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")
+NASA_API_KEY = os.getenv("NASA_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+if not NASA_API_KEY or not GROQ_API_KEY:
+    print("Warning: API keys not found in environment variables.")
 
 # Production configuration
 if os.getenv("RENDER"):

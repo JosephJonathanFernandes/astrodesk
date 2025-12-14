@@ -1,9 +1,21 @@
 [project]
 name = "astrodesk"
 version = "0.1.0"
-description = "Add your description here"
+description = "A comprehensive Python Flask-based web application for space exploration."
 readme = "README.md"
 requires-python = ">=3.12"
+license = {text = "MIT"}
+authors = [
+    {name = "Joseph Jonathan Fernandes", email = "josephjonathanfernandes@gmail.com"}
+]
+keywords = ["space", "nasa", "flask", "astronomy", "ai"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Flask",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
 dependencies = [
     "flask>=3.1.1",
     "groq>=0.29.0",
@@ -13,3 +25,4 @@ dependencies = [
     "requests>=2.32.4",
     "skyfield>=1.53",
 ]
+
