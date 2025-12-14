@@ -1,5 +1,9 @@
 # AstroDesk 🌌🚀
 
+![CI](https://github.com/JosephJonathanFernandes/astrodesk/actions/workflows/ci.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.12-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
 **Coders Club Hackathon 2025 Submission**  
 **Theme Category: Space & Beyond**  
 
