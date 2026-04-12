@@ -17,7 +17,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Astronomy",
 ]
 dependencies = [
-    "flask>=3.1.1",
+    "flask>=3.1.3",
     "groq>=0.29.0",
     "langchain-core>=0.3.68",
     "langchain-groq>=0.3.5",
